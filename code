@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+
+void main() {
+runApp(TravelDiaryApp());
+}
+
+class TravelDiaryApp extends StatelessWidget {
+@override
+Widget build(BuildContext context) {
+return MaterialApp(
+title: 'Travel Diary',
+theme: ThemeData(primarySwatch: Colors.blue),
+home: LoginScreen(),
+);
+}
+}
+
+// Login Screen
+class LoginScreen extends StatefulWidget {
+@override
+_LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+final _formKey = GlobalKey<FormState>();
+final _emailController = TextEditingController();
+final _passwordController = TextEditingController();
+
+void _login() {
+if (_formKey.currentState!.validate()) {
+Navigator.pushReplacement(
+context, MaterialPageRoute(builder: (context) => TripListScreen()));
+}
+}
+
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+appBar: AppBar(title: Text("Login")),
+body: Padding(
+padding: EdgeInsets.all(16.0),
+child: Form(
+key: _formKey,
+child: Column(
+children: [
+TextFormField(
+controller: _emailController,
+decoration: InputDecoration(labelText: "Email"),
+validator: (value) {
+if (value == null || value.isEmpty) {
+return 'Please enter your email';
+}
+return null;
+},
+),
+TextFormField(
+controller: _passwordController,
+decoration: InputDecoration(labelText: "Password"),
+obscureText: true,
+validator: (value) {
+if (value == null || value.isEmpty) {
+return 'Please enter your password';
+}
+return null;
+},
+),
+SizedBox(height: 20),
+ElevatedButton(onPressed: _login, child: Text("Login")),
+],
+),
+),
+),
+);
+}
+}
+
+// Trip List Screen
+class TripListScreen extends StatelessWidget {
+final List<Map<String, String>> trips = [
+{
+'destination': 'Paris',
+'date': '2024-10-15',
+'description': 'A beautiful trip to Paris.',
+},
+{
+'destination': 'Tokyo',
+'date': '2024-11-20',
+'description': 'Exploring the culture of Tokyo.',
+},
+{
+'destination': 'Lahore',
+'date': '2024-11-10',
+'description': 'Explore the old Lahore.',
+},
+{
+'destination': 'Toronto',
+'date': '2024-12-20',
+'description': 'Great visit to Toronto.',
+},
+{
+'destination': 'London',
+'date': '2024-12-10',
+'description': 'Spend few days in London.',
+},
+];
+
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+appBar: AppBar(title: Text("Trips")),
+body: ListView.builder(
+itemCount: trips.length,
+itemBuilder: (context, index) {
+return ListTile(
+title: Text(trips[index]['destination']!),
+subtitle: Text(trips[index]['date']!),
+onTap: () {
+Navigator.push(
+context,
+MaterialPageRoute(
+builder: (context) => TripDetailScreen(trip: trips[index]),
+),
+);
+},
+);
+},
+),
+);
+}
+}
+
+// Trip Detail Screen
+class TripDetailScreen extends StatelessWidget {
+final Map<String, String> trip;
+
+TripDetailScreen({required this.trip});
+
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+appBar: AppBar(title: Text(trip['destination']!)),
+body: SingleChildScrollView(
+child: Padding(
+padding: EdgeInsets.all(16.0),
+child: Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Text(
+trip['destination']!,
+style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+),
+SizedBox(height: 8),
+Text("Date: ${trip['date']}"),
+SizedBox(height: 8),
+Text("Description: ${trip['description']}"),
+],
+),
+),
+),
+);
+}
+}
